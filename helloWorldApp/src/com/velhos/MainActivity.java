@@ -1,8 +1,8 @@
-package com.example.helloworldapp;
+package com.velhos;
 
-import com.example.helloworldapp.Models.Peca;
-import com.example.helloworldapp.Models.Tabuleiro;
-import com.example.helloworldapp.Models.Usuario;
+import com.velhos.Models.Peca;
+import com.velhos.Models.Tabuleiro;
+import com.velhos.Models.Usuario;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+
 
 public class MainActivity extends Activity {
 	Button btnA1;
@@ -59,7 +61,9 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				PutUserPiece("A1");
+				
 			}
+
 		});
 		btnA2.setOnClickListener(new OnClickListener() {
 			@Override
@@ -157,7 +161,7 @@ public class MainActivity extends Activity {
 	public void PutUserPiece(String position) 
 	{
 		Peca p = new Peca(usuario._tipoPeca);
-		table.tabla.put(p, position);
+		table.JogarPeca(p, position);
 		btnA1.setText(usuario._tipoPeca);
 	}
 	

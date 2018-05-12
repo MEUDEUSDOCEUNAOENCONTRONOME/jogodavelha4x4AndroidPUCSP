@@ -1,4 +1,4 @@
-package com.example.helloworldapp.Models;
+package com.velhos.Models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Tabuleiro {
-	public Map<Peca, String> tabla = new HashMap<Peca, String>();
-	public List<String> positions;
+	Map<Peca, String> tabla = new HashMap<Peca, String>();
+	List<String> positions;
 	
 	public Tabuleiro() 
 	{
