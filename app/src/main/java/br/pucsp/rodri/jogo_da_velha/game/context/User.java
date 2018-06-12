@@ -6,6 +6,7 @@ public class User {
     String _tipoPeca = "";
     int _dificultLevel = 0;
     int _id = 0;
+    int _points = 0;
     boolean _Machine = false;
 
     public User(final boolean Machine, final int dificultLevel, final String tipoPeca)
@@ -48,5 +49,13 @@ public class User {
     public boolean isMachine()
     {
         return _Machine;
+    }
+    public void sumPoint(int points)
+    {
+        this._points = this._points + points;
+    }
+    public int getPoints()
+    {
+        return this._points;
     }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Table {
     Map<String, Piece> table = new HashMap<String,Piece>();
-    List<String> positions = new ArrayList<String>();;
+    List<String> positions = new ArrayList<String>();
 
     public Table()
     {

@@ -40,4 +40,20 @@ public class Move {
     {
         return _judge.getMessage();
     }
+    public Piece getPiece()
+    {
+        return _piece;
+    }
+    public Table getTable()
+    {
+        return _table;
+    }
+    public User getOwner()
+    {
+        return _owner;
+    }
+    public String getPosition()
+    {
+        return _position;
+    }
 }

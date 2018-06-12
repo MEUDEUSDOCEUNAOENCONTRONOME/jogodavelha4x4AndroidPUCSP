@@ -78,4 +78,16 @@ public class GameContext {
     {
         return _table;
     }
+    public User getPlayerOne()
+    {
+        return _playerOne;
+    }
+    public User getPlayerTwo()
+    {
+        return _playerTwo;
+    }
+    public GameConfiguration getGameConfiguration()
+    {
+        return _gameConfiguration;
+    }
 }

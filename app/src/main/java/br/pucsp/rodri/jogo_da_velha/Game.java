@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.security.KeyPair;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,8 @@ public class Game extends AppCompatActivity {
     Button _btn44;
 
     Button _machineMove;
+    Button _playerOnePoints;
+    Button _playerTwoPoints;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,8 @@ public class Game extends AppCompatActivity {
         String mode = retrieveExtra("mode");
 
         _machineMove = findViewById(R.id.machineMove);
+        _playerOnePoints = findViewById(R.id.pointsPlayerOne);
+        _playerTwoPoints = findViewById(R.id.pointsPlayerTwo);
 
         if(mode.equals("x1"))
         {
@@ -77,6 +82,8 @@ public class Game extends AppCompatActivity {
 
         syncButtons();
 
+        _playerOnePoints.setText(Integer.toString(_gameContext.getPlayerOne().getPoints()));
+        _playerTwoPoints.setText(Integer.toString(_gameContext.getPlayerTwo().getPoints()));
 
         _machineMove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +224,29 @@ public class Game extends AppCompatActivity {
                     Toast.makeText(this,move.getJudgeMessage(),Toast.LENGTH_SHORT).show();
                 }
                 syncTable();
+                if(move.getJudgeMessage().equals("Ok")) {
+                    if (verifyPoint(move.getPosition(), move.getPiece(), move.getTable().getGame())) {
+                        _gameContext.getNextTurnOwner().sumPoint(1);
+
+                        _playerOnePoints.setText(Integer.toString(_gameContext.getPlayerOne().getPoints()));
+                        _playerTwoPoints.setText(Integer.toString(_gameContext.getPlayerTwo().getPoints()));
+                    }
+                    if (_gameContext.getTable().getFreePositions().size() == 0)
+                    {
+                        User winner;
+                        if(_gameContext.getPlayerOne().getPoints() > _gameContext.getPlayerTwo().getPoints())
+                            winner = _gameContext.getPlayerOne();
+                        else if (_gameContext.getPlayerOne().getPoints() == _gameContext.getPlayerTwo().getPoints())
+                            winner = null;
+                        else
+                            winner = _gameContext.getPlayerTwo();
+                        if(!winner.equals(null))
+                            Toast.makeText(this,"Game is over. Player "+winner.getPiece()+" won!", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this,"Game is over. It's a draw!", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
             }
         }
     }
@@ -239,6 +269,31 @@ public class Game extends AppCompatActivity {
                 Toast.makeText(this,move.getJudgeMessage(),Toast.LENGTH_SHORT);
             }
             syncTable();
+
+            if(move.getJudgeMessage().equals("Ok")) {
+                if (verifyPoint(move.getPosition(), move.getPiece(), move.getTable().getGame())) {
+                    _gameContext.getNextTurnOwner().sumPoint(1);
+
+                    _playerOnePoints.setText(Integer.toString(_gameContext.getPlayerOne().getPoints()));
+                    _playerTwoPoints.setText(Integer.toString(_gameContext.getPlayerTwo().getPoints()));
+                }
+
+                if (_gameContext.getTable().getFreePositions().size() == 0)
+                {
+                    User winner;
+                    if(_gameContext.getPlayerOne().getPoints() > _gameContext.getPlayerTwo().getPoints())
+                        winner = _gameContext.getPlayerOne();
+                    else if (_gameContext.getPlayerOne().getPoints() == _gameContext.getPlayerTwo().getPoints())
+                        winner = null;
+                    else
+                        winner = _gameContext.getPlayerTwo();
+                    if(!winner.equals(null))
+                        Toast.makeText(this,"Game is over. Player "+winner.getPiece()+" won!", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this,"Game is over. It's a draw!", Toast.LENGTH_SHORT).show();
+
+                }
+            }
         }
     }
     private String retrieveExtra(String extra) {
@@ -253,11 +308,101 @@ public class Game extends AppCompatActivity {
         syncSecondLine(ocupiedPieces);
         syncThirdLine(ocupiedPieces);
         syncFourthLine(ocupiedPieces);
-
-        checkPoints();
     }
 
-    private void checkPoints() {
+    private boolean verifyPoint(String position, Piece piece, Map<String, Piece> ocupiedPieces)
+    {
+        int y = Integer.parseInt(position.substring(0,1));
+        int x = Integer.parseInt(position.substring(1,2));
+        int previousX = 0;
+        int previousY = 0;
+        int nextY = 0;
+        int nextX = 0;
+
+        if(y > 1)
+        {
+            previousY = y-1;
+            if(ocupiedPieces.containsKey(Integer.toString(previousY) + Integer.toString(x))) {
+                if (ocupiedPieces.get(Integer.toString(previousY) + Integer.toString(x)).getType().equals(piece.getType()))
+                {
+                    if(previousY > 1){
+                        int prevprev = previousY-1;
+                        if(ocupiedPieces.containsKey(Integer.toString(prevprev) +Integer.toString(x)))
+                            if(ocupiedPieces.get(Integer.toString(prevprev) +Integer.toString(x)).getType().equals(piece.getType()))
+                            {
+                                return true;
+                            }
+                    }
+                }
+            }
+
+        }
+        if(y < 4)
+        {
+            nextY = y+1;
+            if(ocupiedPieces.containsKey(Integer.toString(nextY) + Integer.toString(x))) {
+                if (ocupiedPieces.get(Integer.toString(nextY) + Integer.toString(x)).getType().equals(piece.getType()))
+                {
+                    if(nextY > 1){
+                        int nextnext = (nextY+1);
+                        if(ocupiedPieces.containsKey(Integer.toString(nextnext) + Integer.toString(x)))
+                            if(ocupiedPieces.get(Integer.toString(nextnext) + Integer.toString(x)).getType().equals(piece.getType()))
+                            {
+                                return true;
+                            }
+                    }
+                }
+            }
+
+        }
+
+
+        if(x > 1)
+        {
+            previousX= x-1;
+
+            if(ocupiedPieces.containsKey( Integer.toString(y) + Integer.toString(previousX))) {
+                if (ocupiedPieces.get(Integer.toString(y) + Integer.toString(previousX)).getType().equals(piece.getType()))
+                {
+                    if(previousX > 1){
+                        int prevprev = previousX-1;
+                        if(ocupiedPieces.containsKey(Integer.toString(y) + Integer.toString(prevprev)))
+                            if(ocupiedPieces.get(Integer.toString(y) + Integer.toString(prevprev)).getType().equals(piece.getType()))
+                            {
+                                return true;
+                            }
+                    }
+                }
+            }
+        }
+
+        if(x < 4)
+        {
+            nextX = x+1;
+
+            if(ocupiedPieces.containsKey( Integer.toString(y) + Integer.toString(nextX))) {
+                if (ocupiedPieces.get(Integer.toString(y) + Integer.toString(nextX)).getType().equals(piece.getType()))
+                {
+                    if(nextX > 1){
+                        int nextnext = nextX+1;
+                        if(ocupiedPieces.containsKey(Integer.toString(y) + Integer.toString(nextnext)))
+                            if(ocupiedPieces.get(Integer.toString(y) + Integer.toString(nextnext)).getType().equals(piece.getType()))
+                            {
+                                return true;
+                            }
+                    }
+                }
+            }
+
+        }
+
+        return false;
+
+
+    }
+
+    public void nothing()
+    {
         if (_gameContext.getTable().getFreePositions().size() == 0)
         {
             Toast.makeText(this,"Game is over", Toast.LENGTH_SHORT).show();
