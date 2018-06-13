@@ -12,4 +12,9 @@ public class Piece {
     {
         return _type;
     }
+    public String getInverseType()
+    {
+        if(_type.equals("X")) return "O";
+        else return "X";
+    }
 }

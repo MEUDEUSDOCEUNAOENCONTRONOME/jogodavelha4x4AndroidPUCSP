@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import br.pucsp.rodri.jogo_da_velha.game.context.AI.Memory;
+import br.pucsp.rodri.jogo_da_velha.game.context.AI.Models.MemoryTable;
 import br.pucsp.rodri.jogo_da_velha.game.context.GameConfiguration;
 import br.pucsp.rodri.jogo_da_velha.game.context.Judge;
 import br.pucsp.rodri.jogo_da_velha.game.context.Piece;
@@ -225,8 +227,15 @@ public class Game extends AppCompatActivity {
                 }
                 syncTable();
                 if(move.getJudgeMessage().equals("Ok")) {
-                    if (verifyPoint(move.getPosition(), move.getPiece(), move.getTable().getGame())) {
-                        _gameContext.getNextTurnOwner().sumPoint(1);
+                    int points = verifyPoint(move.getPosition(), move.getPiece(), move.getTable().getGame());
+                    if (points > 0) {
+                        _gameContext.getNextTurnOwner().sumPoint(points);
+
+                        MemoryTable memoryTable = new MemoryTable(move.getTable(),move);
+                        Memory memory = new Memory(getBaseContext());
+                        String resultado = memory.insereDado(memoryTable);
+                        Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
+
 
                         _playerOnePoints.setText(Integer.toString(_gameContext.getPlayerOne().getPoints()));
                         _playerTwoPoints.setText(Integer.toString(_gameContext.getPlayerTwo().getPoints()));
@@ -271,8 +280,11 @@ public class Game extends AppCompatActivity {
             syncTable();
 
             if(move.getJudgeMessage().equals("Ok")) {
-                if (verifyPoint(move.getPosition(), move.getPiece(), move.getTable().getGame())) {
-                    _gameContext.getNextTurnOwner().sumPoint(1);
+
+                int points = verifyPoint(move.getPosition(), move.getPiece(), move.getTable().getGame());
+                if(points > 0)
+                {
+                    _gameContext.getNextTurnOwner().sumPoint(points);
 
                     _playerOnePoints.setText(Integer.toString(_gameContext.getPlayerOne().getPoints()));
                     _playerTwoPoints.setText(Integer.toString(_gameContext.getPlayerTwo().getPoints()));
@@ -310,8 +322,10 @@ public class Game extends AppCompatActivity {
         syncFourthLine(ocupiedPieces);
     }
 
-    private boolean verifyPoint(String position, Piece piece, Map<String, Piece> ocupiedPieces)
+    private int verifyPoint(String position, Piece piece, Map<String, Piece> ocupiedPieces)
     {
+        int pontos = 0;
+
         int y = Integer.parseInt(position.substring(0,1));
         int x = Integer.parseInt(position.substring(1,2));
         int previousX = 0;
@@ -330,7 +344,7 @@ public class Game extends AppCompatActivity {
                         if(ocupiedPieces.containsKey(Integer.toString(prevprev) +Integer.toString(x)))
                             if(ocupiedPieces.get(Integer.toString(prevprev) +Integer.toString(x)).getType().equals(piece.getType()))
                             {
-                                return true;
+                                pontos++;
                             }
                     }
                 }
@@ -348,11 +362,34 @@ public class Game extends AppCompatActivity {
                         if(ocupiedPieces.containsKey(Integer.toString(nextnext) + Integer.toString(x)))
                             if(ocupiedPieces.get(Integer.toString(nextnext) + Integer.toString(x)).getType().equals(piece.getType()))
                             {
-                                return true;
+                                pontos++;
                             }
                     }
                 }
             }
+
+        }
+
+        if(y > 1 && y < 4)
+        {
+            int inextY = 0;
+            int ipreviousY = 0;
+
+            inextY = y+1;
+            ipreviousY = y-1;
+
+                if(ocupiedPieces.containsKey(Integer.toString(inextY) + Integer.toString(x))) {
+                    if (ocupiedPieces.get(Integer.toString(inextY) + Integer.toString(x)).getType().equals(piece.getType()))
+                    {
+
+                            if(ocupiedPieces.containsKey(Integer.toString(ipreviousY) + Integer.toString(x)))
+                                if(ocupiedPieces.get(Integer.toString(ipreviousY) + Integer.toString(x)).getType().equals(piece.getType()))
+                                {
+                                    pontos++;
+                                }
+
+                    }
+                }
 
         }
 
@@ -369,7 +406,7 @@ public class Game extends AppCompatActivity {
                         if(ocupiedPieces.containsKey(Integer.toString(y) + Integer.toString(prevprev)))
                             if(ocupiedPieces.get(Integer.toString(y) + Integer.toString(prevprev)).getType().equals(piece.getType()))
                             {
-                                return true;
+                                pontos++;
                             }
                     }
                 }
@@ -388,7 +425,7 @@ public class Game extends AppCompatActivity {
                         if(ocupiedPieces.containsKey(Integer.toString(y) + Integer.toString(nextnext)))
                             if(ocupiedPieces.get(Integer.toString(y) + Integer.toString(nextnext)).getType().equals(piece.getType()))
                             {
-                                return true;
+                                pontos++;
                             }
                     }
                 }
@@ -396,24 +433,26 @@ public class Game extends AppCompatActivity {
 
         }
 
-        return false;
-
-
-    }
-
-    public void nothing()
-    {
-        if (_gameContext.getTable().getFreePositions().size() == 0)
+        if(x < 4 && x > 1)
         {
-            Toast.makeText(this,"Game is over", Toast.LENGTH_SHORT).show();
-            return;
+            int inextX = x+1;
+            int ipreviousX = x-1;
+
+                if(ocupiedPieces.containsKey( Integer.toString(y) + Integer.toString(inextX))) {
+                    if (ocupiedPieces.get(Integer.toString(y) + Integer.toString(inextX)).getType().equals(piece.getType()))
+                    {
+                            if(ocupiedPieces.containsKey(Integer.toString(y) + Integer.toString(ipreviousX)))
+                                if(ocupiedPieces.get(Integer.toString(y) + Integer.toString(ipreviousX)).getType().equals(piece.getType()))
+                                {
+                                    pontos++;
+                                }
+                    }
+                }
+
         }
 
-        Toast.makeText(this,"No one won yet", Toast.LENGTH_SHORT).show();
-
-        return;
+        return pontos;
     }
-
     public void syncFirstLine(Map<String, Piece> ocupiedPieces)
     {
         if(ocupiedPieces.containsKey("11"))
