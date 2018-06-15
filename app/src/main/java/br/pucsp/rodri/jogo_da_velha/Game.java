@@ -1,6 +1,7 @@
 package br.pucsp.rodri.jogo_da_velha;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -234,7 +235,8 @@ public class Game extends AppCompatActivity {
                         MemoryTable memoryTable = new MemoryTable(move.getTable(),move);
                         Memory memory = new Memory(getBaseContext());
                         String resultado = memory.insereDado(memoryTable);
-                        Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
+                        Cursor c = memory.carregaDados();
+                        Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
 
 
                         _playerOnePoints.setText(Integer.toString(_gameContext.getPlayerOne().getPoints()));
@@ -249,7 +251,7 @@ public class Game extends AppCompatActivity {
                             winner = null;
                         else
                             winner = _gameContext.getPlayerTwo();
-                        if(!winner.equals(null))
+                        if(!(winner == null))
                             Toast.makeText(this,"Game is over. Player "+winner.getPiece()+" won!", Toast.LENGTH_SHORT).show();
                         else
                             Toast.makeText(this,"Game is over. It's a draw!", Toast.LENGTH_SHORT).show();
@@ -299,7 +301,7 @@ public class Game extends AppCompatActivity {
                         winner = null;
                     else
                         winner = _gameContext.getPlayerTwo();
-                    if(!winner.equals(null))
+                    if(!(winner == null))
                         Toast.makeText(this,"Game is over. Player "+winner.getPiece()+" won!", Toast.LENGTH_SHORT).show();
                     else
                         Toast.makeText(this,"Game is over. It's a draw!", Toast.LENGTH_SHORT).show();

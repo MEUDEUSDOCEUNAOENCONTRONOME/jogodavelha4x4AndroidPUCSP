@@ -10,32 +10,32 @@ import br.pucsp.rodri.jogo_da_velha.game.context.play.Move;
 
 public class MemoryTable {
 
-    public String position11 = "";
-    public String position12 = "";
-    public String position13 = "";
-    public String position14 = "";
+    public static String position11 = "";
+    public static String position12 = "";
+    public static String position13 = "";
+    public static String position14 = "";
 
-    public String position21 = "";
-    public String position22 = "";
-    public String position23 = "";
-    public String position24 = "";
+    public static String position21 = "";
+    public static String position22 = "";
+    public static String position23 = "";
+    public static String position24 = "";
 
-    public String position31 = "";
-    public String position32 = "";
-    public String position33 = "";
-    public String position34 = "";
+    public static String position31 = "";
+    public static String position32 = "";
+    public static String position33 = "";
+    public static String position34 = "";
 
-    public String position41 = "";
-    public String position42 = "";
-    public String position43 = "";
-    public String position44 = "";
+    public static String position41 = "";
+    public static String position42 = "";
+    public static String position43 = "";
+    public static String position44 = "";
 
-    public String movePosition = "";
-    public String pieceType = "";
+    public static String movePosition = "";
+    public static String pieceType = "";
 
-    public String environment = "";
+    public static String environment = "";
 
-    public int differencePoints = 0;
+    public static int differencePoints = 0;
 
     public MemoryTable(Table table, Move move)
     {
