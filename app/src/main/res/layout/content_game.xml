@@ -109,7 +109,7 @@
                 android:id="@+id/machineMove"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Machine"/>
+                android:text="Machine Move"/>
 
             <Button
                 android:id="@+id/pointsPlayerOne"

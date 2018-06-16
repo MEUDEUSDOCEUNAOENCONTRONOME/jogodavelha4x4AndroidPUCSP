@@ -11,7 +11,6 @@ public class Table {
 
     public Table()
     {
-
         positions.add("11");
         positions.add("12");
         positions.add("13");
@@ -65,5 +64,10 @@ public class Table {
             }
         }
         return notUsedPositions;
+    }
+    public Table forceNewTable(Map<String, Piece> table)
+    {
+        this.table = table;
+        return this;
     }
 }

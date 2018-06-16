@@ -15,6 +15,7 @@ import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import br.pucsp.rodri.jogo_da_velha.game.context.AI.Memory;
 import br.pucsp.rodri.jogo_da_velha.game.context.AI.Models.MemoryTable;
@@ -235,8 +236,8 @@ public class Game extends AppCompatActivity {
                         MemoryTable memoryTable = new MemoryTable(move.getTable(),move);
                         Memory memory = new Memory(getBaseContext());
                         String resultado = memory.insereDado(memoryTable);
-                        Cursor c = memory.carregaDados();
-                        Toast.makeText(getApplicationContext(), c.toString(), Toast.LENGTH_LONG).show();
+
+                        //Toast.makeText(getApplicationContext(), newPosition, Toast.LENGTH_LONG).show();
 
 
                         _playerOnePoints.setText(Integer.toString(_gameContext.getPlayerOne().getPoints()));
@@ -268,8 +269,33 @@ public class Game extends AppCompatActivity {
             // ===========================================================================
             //| TODO: definir um código de posição recomendado com base nas jogadas.      |
             // ===========================================================================
+            Memory memory = new Memory(getBaseContext());
+
+            Move newMove = memory.getMove(_gameContext.getPlayerTwo().getPiece(),_gameContext.getTable(),_gameContext.getNextTurnOwner(), _gameContext.GetJudge());
+
+            String newPosition = "";
+
             List<String> freePositions = _gameContext.getTable().getFreePositions();
-            String positionCode = freePositions.get(0);
+
+            String positionCode = "";
+            if(newMove != null)
+            {
+                newPosition = newMove.getPosition();
+                positionCode = newPosition;
+            }
+            else
+            {
+                Random seed = new Random();
+                Integer size = freePositions.size()-1;
+                if(size >= 0) {
+                    if (size == 0) {
+                        positionCode = freePositions.get(0);
+                    } else {
+                        positionCode = freePositions.get(seed.nextInt(size));
+                    }
+                }
+            }
+
             //============================================================================
 
             User user = _gameContext.getCurrentTurnOwner();

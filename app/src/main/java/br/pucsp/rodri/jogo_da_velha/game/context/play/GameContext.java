@@ -90,4 +90,8 @@ public class GameContext {
     {
         return _gameConfiguration;
     }
+    public Judge GetJudge()
+    {
+        return _judge;
+    }
 }
